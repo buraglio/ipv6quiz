@@ -890,7 +890,7 @@ func handleQuiz(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Select 20 random questions
-	currentQuiz = selectRandomQuestions(questions, 3)
+	currentQuiz = selectRandomQuestions(questions, 20)
 	userAnswers = make([]int, len(currentQuiz))
 	correctAnswers = make([]int, len(currentQuiz))
 	for i, q := range currentQuiz {

@@ -1,11 +1,16 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"html/template"
+	"log"
 	"math/rand"
 	"net/http"
+	"os"
+	"os/exec"
 	"strconv"
+	"syscall"
 )
 
 type Question struct {
@@ -29,14 +34,48 @@ var (
 )
 
 func main() {
+	daemon := flag.Bool("d", false, "Run as a daemon")
+	flag.Parse()
+
+	if *daemon {
+		daemonize()
+	}
+
 	initializeQuestions()
 	initializeTemplates()
+	startWebServer()
+}
 
-	// Start the web server in a goroutine
-	go startWebServer()
+// Add bits and pieces to daemonize this using -d
 
-	// Keep the main goroutine alive
-	select {}
+func daemonize() {
+	// Check if we're already a daemon
+	if os.Getppid() == 1 {
+		return
+	}
+
+	// Create a new command with the same arguments
+	cmd := exec.Command(os.Args[0], os.Args[1:]...)
+	cmd.Stdout = nil
+	cmd.Stderr = nil
+	cmd.Stdin = nil
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
+
+	// Start the process
+	err := cmd.Start()
+	if err != nil {
+		log.Fatalf("Failed to daemonize: %v", err)
+	}
+
+	// Write PID file
+	pid := cmd.Process.Pid
+	err = os.WriteFile("ipv6quiz.pid", []byte(fmt.Sprintf("%d", pid)), 0644)
+	if err != nil {
+		log.Printf("Warning: Could not write PID file: %v", err)
+	}
+
+	fmt.Printf("Daemon started with PID %d\n", pid)
+	os.Exit(0)
 }
 
 func initializeQuestions() {

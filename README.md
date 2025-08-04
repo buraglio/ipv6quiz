@@ -4,6 +4,9 @@ A web-based quiz application that tests knowledge of IPv6 addressing and protoco
 The Framework is fairly flexible and simple. The multiple choice questions are all encoded in the actual binary, this might be dumb. However, the goal
 was to make this completely self-contained, so that's how I did it. It should be fairly trivial to rip out the questions and put in questions about whatever.
 For ease of reading, the questions are also broken out into a txt file.
+
+It is meant to be reverse proxied with something like nginx, or to run stand alone on a workstation.
+
 ## Features
 
 - 70+ IPv6-related multiple choice questions

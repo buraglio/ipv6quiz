@@ -890,7 +890,7 @@ func handleQuiz(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Select 20 random questions
-	currentQuiz = selectRandomQuestions(questions, 20)
+	currentQuiz = selectRandomQuestions(questions, 3)
 	userAnswers = make([]int, len(currentQuiz))
 	correctAnswers = make([]int, len(currentQuiz))
 	for i, q := range currentQuiz {
@@ -926,21 +926,36 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	renderQuiz(w, true, result, currentQuiz, userAnswers, correctAnswers)
 }
 func renderQuiz(w http.ResponseWriter, showResults bool, result QuizResult, questions []Question, userAnswers, correctAnswers []int) {
+	funcMap := template.FuncMap{
+		"add": func(a, b int) int { return a + b },
+	}
+
+	tmpl, err := quizTemplate.Clone()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	tmpl.Funcs(funcMap)
+
 	data := struct {
 		ShowResults    bool
-		Result         QuizResult
+		Score          int
+		Total          int
+		Percentage     float64
 		Questions      []Question
 		UserAnswers    []int
 		CorrectAnswers []int
 	}{
 		ShowResults:    showResults,
-		Result:         result,
+		Score:          result.Score,
+		Total:          result.Total,
+		Percentage:     result.Percentage,
 		Questions:      questions,
 		UserAnswers:    userAnswers,
 		CorrectAnswers: correctAnswers,
 	}
 
-	err := quizTemplate.Execute(w, data)
+	err = tmpl.Execute(w, data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

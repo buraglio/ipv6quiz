@@ -65,12 +65,12 @@ To add or modify questions, edit the questions slice in the source code. Each qu
 
 ```
 {
-    Text: &quot;Question text here&quot;,
+    Text: Question text here,
     Options: []string{
-        &quot;Option 1&quot;,
-        &quot;Option 2&quot;,
-        &quot;Option 3&quot;,
-        &quot;Option 4&quot;,
+        Option 1,
+        Option 2,
+        Option 3,
+        Option 4,
     },
     Answer: indexOfCorrectAnswer, // 0-based
 },

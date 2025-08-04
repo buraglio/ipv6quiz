@@ -1,7 +1,9 @@
 # IPv6 Quiz Application
 
 A web-based quiz application that tests knowledge of IPv6 addressing and protocols, written in Go.
-
+The Framework is fairly flexible and simple. The multiple choice questions are all encoded in the actual binary, this might be dumb. However, the goal
+was to make this completely self-contained, so that's how I did it. It should be fairly trivial to rip out the questions and put in questions about whatever.
+For ease of reading, the questions are also broken out into a txt file.
 ## Features
 
 - 70+ IPv6-related multiple choice questions

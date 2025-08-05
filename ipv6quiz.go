@@ -532,16 +532,6 @@ func initializeQuestions() {
 			Answer: 0,
 		},
 		{
-			Text: "What is the IPv6 prefix for BGP router addresses?",
-			Options: []string{
-				"2001:5::/32",
-				"2001:10::/28",
-				"2001:20::/28",
-				"fc00::/7",
-			},
-			Answer: 0,
-		},
-		{
 			Text: "Which ICMPv6 message type is used for Echo Request?",
 			Options: []string{
 				"Type 128",
@@ -872,11 +862,11 @@ func startWebServer() {
 	mux.HandleFunc("/submit", handleSubmit)
 
 	server := &http.Server{
-		Addr:    "[::1]:5000",
+		Addr:    "[::1]:5004",
 		Handler: mux,
 	}
 
-	fmt.Println("Starting IPv6 web server on [::1]:5000")
+	fmt.Println("Starting IPv6 web server on [::1]:5004")
 	err := server.ListenAndServe()
 	if err != nil {
 		panic("Failed to start server: " + err.Error())
@@ -890,7 +880,7 @@ func handleQuiz(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Select 20 random questions
-	currentQuiz = selectRandomQuestions(questions, 20)
+	currentQuiz = selectRandomQuestions(questions, 5)
 	userAnswers = make([]int, len(currentQuiz))
 	correctAnswers = make([]int, len(currentQuiz))
 	for i, q := range currentQuiz {
